@@ -3,10 +3,10 @@ export type VideoDBType = {
   title: string;
   author: string;
   canBeDownloaded: boolean;
-  minAgeRestriction: number;
+  minAgeRestriction: number | null;
   createdAt: string;
   publicationDate: string;
-  availableResolutions: Resolutions;
+  availableResolutions: Resolutions[];
 }
 
 export enum Resolutions {
@@ -14,8 +14,8 @@ export enum Resolutions {
   P240 = 'P240',
   P360 = 'P360',
   P480 = 'P480',
-  P720 = '720',
-  P1080 = '1080',
+  P720 = 'P720',
+  P1080 = 'P1080',
   P1440 = 'P1440',
   P2160 = 'P2160',
 }

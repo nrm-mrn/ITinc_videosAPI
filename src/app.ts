@@ -1,5 +1,4 @@
 import express from 'express'
-import { getVideosController } from './videos/getVideosController'
 import { videosRouter } from './videos/videosRouter'
 
 
@@ -12,4 +11,3 @@ app.get('/', (req, res) => {
   res.status(200).json({ version: '1.0' })
 })
 
-app.get('/videos', getVideosController)
