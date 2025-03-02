@@ -19,6 +19,11 @@ export type UpdateVideoInputModel = {
   publicationDate: string;
 }
 
+const isValidISODate = (inputDate: string): boolean => {
+  const date = new Date(inputDate);
+  return !isNaN(date.getTime()) && date.toISOString() === inputDate;
+};
+
 export const videosRouter = Router({})
 
 
@@ -91,7 +96,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, any, UpdateVideoInputMode
   if (update.minAgeRestriction && (update.minAgeRestriction < 1 || update.minAgeRestriction > 18)) {
     errors.errorsMessages.push({ message: 'Wrong age restriction', field: 'minAgeRestriction' })
   }
-  if (!update.publicationDate) {
+  if (!update.publicationDate || !isValidISODate(update.publicationDate)) {
     errors.errorsMessages.push({ message: 'Publication date', field: 'publicationDate' })
   }
   if (errors.errorsMessages.length) {
