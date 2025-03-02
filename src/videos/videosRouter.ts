@@ -27,18 +27,18 @@ videosRouter.get('/', (req: Request, res: Response) => {
   res.status(200).send(videos)
 })
 
-videosRouter.post('/', (req: Request<any, any, CreateVideoInputModel>, res: Response) => {
-  let errors: APIErrorResult = { errorMessages: [] }
+videosRouter.post('/', (req: Request<any, any, CreateVideoInputModel>, res: Response<VideoDBType | APIErrorResult>) => {
+  let errors: APIErrorResult = { errorsMessages: [] }
   if (!req.body.title || req.body.title.length > 40) {
-    errors.errorMessages.push({ message: 'title is incorrect', field: 'title' })
+    errors.errorsMessages.push({ message: 'title is incorrect', field: 'title' })
   }
   if (!req.body.author || req.body.author.length > 20) {
-    errors.errorMessages.push({ message: 'author is incorrect', field: 'author' })
+    errors.errorsMessages.push({ message: 'author is incorrect', field: 'author' })
   }
   if (!Array.isArray(req.body.availableResolutions) || req.body.availableResolutions.find(r => !Resolutions[r])) {
-    errors.errorMessages.push({ message: 'resolutions are incorrect', field: 'availableResolutions' })
+    errors.errorsMessages.push({ message: 'resolutions are incorrect', field: 'availableResolutions' })
   }
-  if (errors.errorMessages.length) {
+  if (errors.errorsMessages.length) {
     res.status(400).json(errors)
     return
   }
@@ -75,26 +75,26 @@ videosRouter.put('/:id', (req: Request<{ id: string }, any, UpdateVideoInputMode
     return
   }
   const update = req.body
-  const errors: APIErrorResult = { errorMessages: [] }
+  const errors: APIErrorResult = { errorsMessages: [] }
   if (!update.title || update.title.length > 40) {
-    errors.errorMessages.push({ message: 'wrong title', field: 'title' })
+    errors.errorsMessages.push({ message: 'wrong title', field: 'title' })
   }
   if (!update.author || update.author.length > 20) {
-    errors.errorMessages.push({ message: 'wrong author', field: 'author' })
+    errors.errorsMessages.push({ message: 'wrong author', field: 'author' })
   }
   if (!Array.isArray(update.availableResolutions) || update.availableResolutions.find(r => !Resolutions[r])) {
-    errors.errorMessages.push({ message: 'wrong res', field: 'availableResolutions' })
+    errors.errorsMessages.push({ message: 'wrong res', field: 'availableResolutions' })
   }
   if (typeof (update.canBeDownloaded) !== "boolean") {
-    errors.errorMessages.push({ message: 'wrong can be downloaded', field: 'canBeDownloaded' })
+    errors.errorsMessages.push({ message: 'wrong can be downloaded', field: 'canBeDownloaded' })
   }
   if (update.minAgeRestriction && (update.minAgeRestriction < 1 || update.minAgeRestriction > 18)) {
-    errors.errorMessages.push({ message: 'Wrong age restriction', field: 'minAgeRestriction' })
+    errors.errorsMessages.push({ message: 'Wrong age restriction', field: 'minAgeRestriction' })
   }
   if (!update.publicationDate) {
-    errors.errorMessages.push({ message: 'Publication date', field: 'publicationDate' })
+    errors.errorsMessages.push({ message: 'Publication date', field: 'publicationDate' })
   }
-  if (errors.errorMessages.length) {
+  if (errors.errorsMessages.length) {
     res.status(400).send(errors);
     return;
   }
