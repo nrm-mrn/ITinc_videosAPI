@@ -123,4 +123,43 @@ describe('/videos', () => {
     expect(updatedVid.minAgeRestriction).toEqual(updateObj.minAgeRestriction)
     expect(updatedVid.publicationDate).toEqual(updateObj.publicationDate)
   })
+
+  it('should create and delete a video', async () => {
+    const vid: CreateVideoInputModel = {
+      title: 'toDelete',
+      author: 'Nik',
+      availableResolutions: [Resolutions.P720, Resolutions.P240]
+    }
+    const res = await req
+      .post(SETTINGS.PATH.VIDEOS)
+      .send(vid)
+      .expect(201)
+    const targetId = res.body.id
+    console.log(targetId)
+    const dbLen = db.videos.length
+
+    await req
+      .delete(SETTINGS.PATH.VIDEOS + `/${targetId}`)
+      .expect(204)
+
+    const newDbLen = db.videos.length
+
+    expect(newDbLen).toEqual(dbLen - 1)
+  })
+
+  it('should not delete anything', async () => {
+    const dbLen = db.videos.length
+    await req
+      .delete(SETTINGS.PATH.VIDEOS + `/${1234 + Math.random()}`)
+      .expect(404)
+    const newDbLen = db.videos.length
+    expect(newDbLen).toEqual(dbLen)
+  })
+
+  afterAll(async () => {
+    await req
+      .delete('/testing/all-data')
+      .expect(204)
+    expect(db.videos.length).toEqual(0)
+  })
 })

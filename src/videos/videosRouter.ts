@@ -72,6 +72,7 @@ videosRouter.put('/:id', (req: Request<{ id: string }, any, UpdateVideoInputMode
   let vid = db.videos.find(v => v.id === targetId)
   if (!vid) {
     res.sendStatus(404)
+    return
   }
   const update = req.body
   const errors: APIErrorResult = { errorMessages: [] }
@@ -97,8 +98,20 @@ videosRouter.put('/:id', (req: Request<{ id: string }, any, UpdateVideoInputMode
     res.status(400).send(errors);
     return;
   }
-  vid = { ...vid!, ...update }
+  vid = { ...vid, ...update }
   const idx = db.videos.findIndex(v => v.id === targetId)
   db.videos[idx] = vid
+  res.sendStatus(204)
+})
+
+videosRouter.delete('/:id', async (req: Request<{ id: string }>, res: Response) => {
+  const targetId = +req.params.id
+  const idx = db.videos.findIndex(v => v.id === targetId)
+  console.log(`found ${targetId}  at ${idx}`)
+  if (idx < 0) {
+    res.sendStatus(404)
+    return
+  }
+  db.videos.splice(idx, 1)
   res.sendStatus(204)
 })
