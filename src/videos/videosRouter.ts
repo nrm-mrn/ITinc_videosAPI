@@ -49,7 +49,7 @@ videosRouter.post('/', (req: Request<any, any, CreateVideoInputModel>, res: Resp
     id: Date.now() + Math.random(),
     createdAt: now.toISOString(),
     publicationDate: nextDay.toISOString(),
-    canBeDownloaded: true,
+    canBeDownloaded: false,
     minAgeRestriction: null,
     ...req.body
   }
