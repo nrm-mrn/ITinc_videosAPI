@@ -1,6 +1,6 @@
 {
-  "version": '1.0',
-  "name": "it-inc-videos-api",
+  "version": 2,
+  "name": "firstLesson",
   "builds": [
     { "src": "src/index.ts" , "use": "@vercel/node" }
   ],
